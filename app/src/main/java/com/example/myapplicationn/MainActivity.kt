@@ -9,13 +9,17 @@ import com.example.myapplicationn.ui.theme.MyApplicationnTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // Create a list of Post objects
+        val posts = List(22) { Post(id = it, content = "This is post $it content.") }
+
         setContent {
             MyApplicationnTheme {
-                ProfilePage()
+                // Pass the list of posts to the ProfilePage composable
+                ProfilePage(posts = posts)
             }
-        }
+        }}
     }
-}
+
 /*
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
