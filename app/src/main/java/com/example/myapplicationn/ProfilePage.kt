@@ -1,6 +1,8 @@
 package com.example.myapplicationn
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
@@ -46,10 +48,15 @@ fun ProfilePage(navController: NavController, viewModel: SearchViewModel) {
             .padding(16.dp)
     ) {
         Text(
-            text = "Profile Page",
+            text = "Jerry Parker",
             style = h4Text,
             modifier = Modifier.padding(16.dp)
         )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Display the Golden Retriever image
+        GoldenRetrieverImage()
 
         Spacer(modifier = Modifier.height(16.dp))
 
