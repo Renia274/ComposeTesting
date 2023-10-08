@@ -10,7 +10,7 @@ android {
     defaultConfig {
         applicationId = "com.example.myapplicationn"
         minSdk = 24
-        targetSdk = 33
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
@@ -66,4 +66,23 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+
+
+    // Navigation Compose
+    implementation("androidx.navigation:navigation-compose:<version>")
+
+    // Navigation Component
+    implementation("androidx.navigation:navigation-fragment-ktx:2.7.4")
+    implementation("androidx.navigation:navigation-ui-ktx:2.7.4")
+
+    //Typography dependency
+    implementation("androidx.compose.ui:ui-text:1.5.3")
+
+    implementation("androidx.compose.ui:ui:1.5.3")
+    implementation("androidx.compose.material:material:1.5.3")
+
+   
+
+
+
 }

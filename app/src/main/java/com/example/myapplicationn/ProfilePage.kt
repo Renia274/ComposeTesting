@@ -1,163 +1,137 @@
 package com.example.myapplicationn
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 
-data class Post(val id: Int, val content: String)
-
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfilePage(posts: List<Post>) {
-    val customElevation = CardDefaults.cardElevation(6.dp)
+fun ProfilePage(navController: NavController, viewModel: SearchViewModel) {
+    var searchText by remember { mutableStateOf("") }
 
-    LazyColumn(
+    // Create a remember for the searchResults list
+    val searchResultsList = remember { mutableListOf<String>() }
+
+    // Create a mutableStateOf for searchResults to trigger recomposition
+    val searchResults by remember { mutableStateOf<List<String>>(searchResultsList) }
+
+    val h4Text = TextStyle(
+        fontWeight = FontWeight.Bold,
+        fontSize = 24.sp,
+        letterSpacing = 0.15.sp
+    )
+
+    val h6Text = TextStyle(
+        fontWeight = FontWeight.Bold,
+        fontSize = 20.sp,
+        letterSpacing = 0.15.sp
+    )
+
+    Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
-            .border(2.dp, Color.Black, shape = RoundedCornerShape(30.dp))
     ) {
-        item {
-            Card(
-                elevation = customElevation,
-                shape = RoundedCornerShape(16.dp),
-                modifier = Modifier
-                    .fillMaxWidth()
-            ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .padding(vertical = 16.dp)
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.golden_retriever),
-                        contentDescription = "golden retriever",
-                        modifier = Modifier
-                            .size(200.dp)
-                            .clip(CircleShape)
-                            .border(width = 4.dp, color = Color.Red),
-                        contentScale = ContentScale.Crop
-                    )
+        Text(
+            text = "Profile Page",
+            style = h4Text,
+            modifier = Modifier.padding(16.dp)
+        )
 
-                    Text(
-                        text = "Retriever",
-                        fontWeight = FontWeight.Bold
-                    )
+        Spacer(modifier = Modifier.height(16.dp))
 
-                    Text(
-                        text = "England",
-                        fontWeight = FontWeight.Bold
-                    )
-
-                    Spacer(modifier = Modifier.height(6.dp))
-
-                    Row(
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Stats(count = "22", title = "Posts")
-                        Stats(count = "150", title = "Followers")
-                        Stats(count = "100", title = "Following")
-                    }
-
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    Row(
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Button(
-                            onClick = { /* Follow action */ },
-                            modifier = Modifier
-                                .weight(1f)
-                                .padding(end = 4.dp)
-                                .fillMaxWidth()
-                        ) {
-                            Text(text = "Follow User")
-                        }
-
-                        Button(
-                            onClick = { /* Message action */ },
-                            modifier = Modifier
-                                .weight(1f)
-                                .padding(start = 4.dp)
-                                .fillMaxWidth()
-                        ) {
-                            Text(text = "Direct Message")
-                        }
-                    }
-
-                    Spacer(modifier = Modifier.height(16.dp))
+        TextField(
+            value = searchText,
+            onValueChange = { newText ->
+                searchText = newText
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color.White) // You can customize the background color
+                .padding(8.dp),
+            textStyle = TextStyle(color = Color.Black), // You can customize text appearance
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Search // Customize keyboard actions
+            ),
+            keyboardActions = KeyboardActions(
+                onSearch = {
+                    performSearch(searchText, searchResultsList)
                 }
+            ),
+            placeholder = {
+                Text(text = "Search")
+            }
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { navController.navigate(Screen.PostList.route) },
+            elevation = CardDefaults.cardElevation(4.dp)
+        ) {
+            Column(
+                modifier = Modifier.padding(16.dp)
+            ) {
+                Text(
+                    text = "View Posts",
+                    style = h6Text
+                )
             }
         }
 
-        // Add a header for the posts section
-        item {
-            Text(
-                text = "Posts",
-                fontWeight = FontWeight.Bold,
-                fontSize = 18.sp,
-                modifier = Modifier.padding(vertical = 8.dp)
-            )
-        }
+        Spacer(modifier = Modifier.height(16.dp))
 
-        // Display all the posts in rows of 3
-        items(posts.chunked(3)) { rowOfPosts ->
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                for (post in rowOfPosts) {
-                    Card(
-                        elevation = customElevation,
-                        modifier = Modifier
-                            .weight(1f)
-                            .padding(8.dp)
-                    ) {
-                        Column(
-                            modifier = Modifier.padding(16.dp)
-                        ) {
-                            Text(text = post.content)
-                        }
-                    }
-                }
-            }
+        // Display user stats
+        StatsRow()
+
+        // Display search results
+        SearchResults(searchResults)
+    }
+}
+
+@Composable
+fun SearchResults(results: List<String>) {
+    Column {
+        Text("Search Results:")
+        results.forEach { result ->
+            Text(result)
         }
     }
 }
 
 @Composable
-fun Stats(count: String, title: String) {
+fun StatsRow() {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        StatsItem(count = "22", title = "Posts")
+        StatsItem(count = "150", title = "Followers")
+        StatsItem(count = "100", title = "Following")
+    }
+}
+
+@Composable
+fun StatsItem(count: String, title: String) {
     Column(
+        modifier = Modifier.padding(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(text = count, fontWeight = FontWeight.Bold)
@@ -165,10 +139,11 @@ fun Stats(count: String, title: String) {
     }
 }
 
-@Preview
-@Composable
-fun ProfilePagePreview() {
-    val posts = List(22) { Post(id = it, content = "This is post $it content.") }
-    ProfilePage(posts = posts)
-}
+fun performSearch(query: String, searchResults: MutableList<String>) {
 
+    val results = listOf("Result 1 for '$query'", "Result 2 for '$query'", "Result 3 for '$query'")
+
+    // Update the search results
+    searchResults.clear()
+    searchResults.addAll(results)
+}

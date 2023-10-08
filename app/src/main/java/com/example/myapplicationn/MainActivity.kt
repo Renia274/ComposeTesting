@@ -1,24 +1,31 @@
 package com.example.myapplicationn
 
+
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.rememberNavController
 import com.example.myapplicationn.ui.theme.MyApplicationnTheme
-
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // Create a list of Post objects
-        val posts = List(22) { Post(id = it, content = "This is post $it content.") }
-
         setContent {
+            val navController = rememberNavController()
+
+            // Initialize the SearchViewModel using the viewModel() function
+            val viewModel: SearchViewModel = viewModel()
+
             MyApplicationnTheme {
-                // Pass the list of posts to the ProfilePage composable
-                ProfilePage(posts = posts)
+                SetupNavigation(navController = navController, viewModel = viewModel)
             }
-        }}
+        }
     }
+}
+
+
+
 
 /*
 @OptIn(ExperimentalMaterial3Api::class)
@@ -106,6 +113,3 @@ fun isValidText(text: String): Boolean {
 fun GreetingPreview() {
     Greeting("Preview Name") // Pass a name to the preview
 }*/
-
-
-
