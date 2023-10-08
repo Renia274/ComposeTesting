@@ -37,7 +37,3 @@ fun SetupNavigation(navController: NavHostController, viewModel: SearchViewModel
         }
     }
 }
-
-
-
-

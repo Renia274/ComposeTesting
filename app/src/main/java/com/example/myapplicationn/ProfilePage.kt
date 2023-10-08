@@ -1,8 +1,6 @@
 package com.example.myapplicationn
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
@@ -24,11 +22,8 @@ import androidx.navigation.NavController
 fun ProfilePage(navController: NavController, viewModel: SearchViewModel) {
     var searchText by remember { mutableStateOf("") }
 
-    // Create a remember for the searchResults list
-    val searchResultsList = remember { mutableListOf<String>() }
-
-    // Create a mutableStateOf for searchResults to trigger recomposition
-    val searchResults by remember { mutableStateOf<List<String>>(searchResultsList) }
+    // Observe the search results using collectAsState
+    val searchResults by viewModel.searchResults.collectAsState()
 
     val h4Text = TextStyle(
         fontWeight = FontWeight.Bold,
@@ -75,7 +70,8 @@ fun ProfilePage(navController: NavController, viewModel: SearchViewModel) {
             ),
             keyboardActions = KeyboardActions(
                 onSearch = {
-                    performSearch(searchText, searchResultsList)
+                    // Call performSearch with the query and viewModel to update search results
+                    performSearch(searchText, viewModel)
                 }
             ),
             placeholder = {
@@ -146,11 +142,13 @@ fun StatsItem(count: String, title: String) {
     }
 }
 
-fun performSearch(query: String, searchResults: MutableList<String>) {
+fun performSearch(query: String, viewModel: SearchViewModel) {
+    val results = listOf("Result  for '$query'", "Result 2 for '$query'", "Result 3 for '$query'")
 
-    val results = listOf("Result 1 for '$query'", "Result 2 for '$query'", "Result 3 for '$query'")
+    // Get the first result from the list (or an empty list if no results)
+    val firstResult = results.firstOrNull()
 
-    // Update the search results
-    searchResults.clear()
-    searchResults.addAll(results)
+    // Update the search results in the ViewModel with the first result
+    viewModel.updateSearchResults(listOfNotNull(firstResult))
 }
+

@@ -71,5 +71,3 @@ fun PostDetail(postId: Int) {
         }
     }
 }
-
-
