@@ -16,6 +16,8 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -25,6 +27,11 @@ fun ProfilePage(navController: NavController, viewModel: SearchViewModel) {
     // Observe the search results and posts using collectAsState
     val searchResults by viewModel.searchResults.collectAsState()
     val posts by viewModel.posts.collectAsState()
+
+
+    // Property to track whether a search is in progress
+    val _isSearching = MutableStateFlow(false)
+    val isSearching: StateFlow<Boolean> = _isSearching
 
     val h4Text = TextStyle(
         fontWeight = FontWeight.Bold,
@@ -56,6 +63,7 @@ fun ProfilePage(navController: NavController, viewModel: SearchViewModel) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        // In your ProfilePage composable
         TextField(
             value = searchText,
             onValueChange = { newText ->
@@ -63,7 +71,7 @@ fun ProfilePage(navController: NavController, viewModel: SearchViewModel) {
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color.White) 
+                .background(Color.White)
                 .padding(8.dp),
             textStyle = TextStyle(color = Color.Black), // customize text appearance
             keyboardOptions = KeyboardOptions(
@@ -72,13 +80,15 @@ fun ProfilePage(navController: NavController, viewModel: SearchViewModel) {
             keyboardActions = KeyboardActions(
                 onSearch = {
                     // Call performSearch with the query and viewModel to update search results
-                    performSearch(searchText, viewModel)
+                    viewModel.performSearch(searchText)
                 }
             ),
             placeholder = {
                 Text(text = "Search")
             }
         )
+
+
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -104,27 +114,24 @@ fun ProfilePage(navController: NavController, viewModel: SearchViewModel) {
         StatsRow()
 
         // Display search results and post content
-        SearchResults(searchResults, posts)
+        SearchResults(posts)
     }
 }
 
-
 @Composable
-fun SearchResults(results: List<String>, posts: List<Post>) {
+fun SearchResults( posts: List<Post>) {
     Column {
-        Text("Search Results:")
-        results.forEach { result ->
-            Text(result)
-        }
 
         Spacer(modifier = Modifier.height(16.dp))
 
         Text("Post Content:")
         posts.forEach { post ->
-            Text(post.content)
+            // Display each post's content here
+            Text("Post ${post.id} content: ${post.content}")
         }
     }
 }
+
 
 @Composable
 fun StatsRow() {
@@ -151,22 +158,4 @@ fun StatsItem(count: String, title: String) {
     }
 }
 
-fun performSearch(query: String, viewModel: SearchViewModel) {
-    // Assuming you have a list of posts available, update the posts in the ViewModel
-    val posts = listOf(
-        Post(id = 1, content = "This is post 1 content."),
-        Post(id = 2, content = "This is post 2 content."),
-        // Add more posts as needed
-    )
-
-    viewModel.updatePosts(posts)
-
-    val results = listOf("Result for '$query'", "Result 2 for '$query'", "Result 3 for '$query'")
-
-    // Get the first result from the list (or an empty list if no results)
-    val firstResult = results.firstOrNull()
-
-    // Update the search results in the ViewModel with the first result
-    viewModel.updateSearchResults(listOfNotNull(firstResult))
-}
 
