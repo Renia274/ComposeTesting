@@ -31,7 +31,6 @@ fun PostList(navController: NavController, viewModel: SearchViewModel) {
         letterSpacing = 0.15.sp
     )
 
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -70,3 +69,4 @@ fun PostList(navController: NavController, viewModel: SearchViewModel) {
         }
     }
 }
+

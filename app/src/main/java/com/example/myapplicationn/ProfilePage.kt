@@ -22,8 +22,9 @@ import androidx.navigation.NavController
 fun ProfilePage(navController: NavController, viewModel: SearchViewModel) {
     var searchText by remember { mutableStateOf("") }
 
-    // Observe the search results using collectAsState
+    // Observe the search results and posts using collectAsState
     val searchResults by viewModel.searchResults.collectAsState()
+    val posts by viewModel.posts.collectAsState()
 
     val h4Text = TextStyle(
         fontWeight = FontWeight.Bold,
@@ -102,17 +103,25 @@ fun ProfilePage(navController: NavController, viewModel: SearchViewModel) {
         // Display user stats
         StatsRow()
 
-        // Display search results
-        SearchResults(searchResults)
+        // Display search results and post content
+        SearchResults(searchResults, posts)
     }
 }
 
+
 @Composable
-fun SearchResults(results: List<String>) {
+fun SearchResults(results: List<String>, posts: List<Post>) {
     Column {
         Text("Search Results:")
         results.forEach { result ->
             Text(result)
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Text("Post Content:")
+        posts.forEach { post ->
+            Text(post.content)
         }
     }
 }
@@ -143,7 +152,16 @@ fun StatsItem(count: String, title: String) {
 }
 
 fun performSearch(query: String, viewModel: SearchViewModel) {
-    val results = listOf("Result  for '$query'", "Result 2 for '$query'", "Result 3 for '$query'")
+    // Assuming you have a list of posts available, update the posts in the ViewModel
+    val posts = listOf(
+        Post(id = 1, content = "This is post 1 content."),
+        Post(id = 2, content = "This is post 2 content."),
+        // Add more posts as needed
+    )
+
+    viewModel.updatePosts(posts)
+
+    val results = listOf("Result for '$query'", "Result 2 for '$query'", "Result 3 for '$query'")
 
     // Get the first result from the list (or an empty list if no results)
     val firstResult = results.firstOrNull()
