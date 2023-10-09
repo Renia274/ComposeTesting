@@ -67,8 +67,7 @@ class SearchViewModel : ViewModel() {
         // Simulate an asynchronous operation, like a network request or database query
         delay(1000) // Simulate a delay to mimic a real operation
 
-        // Replace this with your actual data source logic
-        // Here, we're simulating search results based on a query
+        // search results based on a query
         val results = mockPosts.filter { post ->
             post.content.contains(query, ignoreCase = true)
         }.map { it.content }
