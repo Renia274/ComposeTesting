@@ -20,11 +20,8 @@ class SearchViewModel : ViewModel() {
     private val _isSearching = MutableStateFlow(false)
     val isSearching: StateFlow<Boolean> = _isSearching
 
-    init {
-        // Initialize the list of 22 posts
-        val initialPosts = generateInitialPosts(3)
-        _posts.value = initialPosts
-    }
+    // Property to hold the singlePostId
+    private var singlePostId: Int = 3
 
     // Function to update search results in the ViewModel
     fun updateSearchResults(results: List<String>) {
@@ -35,7 +32,6 @@ class SearchViewModel : ViewModel() {
     fun updatePosts(newPosts: List<Post>) {
         _posts.value = newPosts
     }
-
 
     // Function to perform a search
     fun performSearch(query: String) {
@@ -53,7 +49,8 @@ class SearchViewModel : ViewModel() {
     }
 
     // Simulated data source representing a list of posts
-    private val mockPosts = generateInitialPosts(singlePostId = 3)
+    private val mockPosts: List<Post>
+    get() = generateInitialPosts(singlePostId)
 
     private fun generateInitialPosts(singlePostId: Int): List<Post> {
         return listOf(
@@ -61,6 +58,10 @@ class SearchViewModel : ViewModel() {
         )
     }
 
+    // Function to dynamically update singlePostId
+    fun updateSinglePostId(newId: Int) {
+        singlePostId = newId
+    }
 
     private suspend fun fetchDataFromDataSource(query: String): List<String> {
         // Simulate an asynchronous operation, like a network request or database query

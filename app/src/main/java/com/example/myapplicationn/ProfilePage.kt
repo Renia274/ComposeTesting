@@ -16,22 +16,30 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+
+
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
+
 fun ProfilePage(navController: NavController, viewModel: SearchViewModel) {
     var searchText by remember { mutableStateOf("") }
 
     // Observe the search results and posts using collectAsState
-    val searchResults by viewModel.searchResults.collectAsState()
     val posts by viewModel.posts.collectAsState()
 
-
     // Property to track whether a search is in progress
-    val _isSearching = MutableStateFlow(false)
-    val isSearching: StateFlow<Boolean> = _isSearching
+    val isSearching: Boolean by viewModel.isSearching.collectAsState()
+
+    val dynamicPostId: MutableState<Int> = remember { mutableStateOf(1) }
+
+    // Function to update the post ID when the button is clicked
+    val updatePostId: () -> Unit = {
+        val newId = 3/* Calculate the new ID dynamically */
+            dynamicPostId.value = newId
+        viewModel.updateSinglePostId(newId)
+    }
 
     val h4Text = TextStyle(
         fontWeight = FontWeight.Bold,
@@ -88,15 +96,14 @@ fun ProfilePage(navController: NavController, viewModel: SearchViewModel) {
             }
         )
 
-
-
         Spacer(modifier = Modifier.height(16.dp))
 
         Card(
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable { navController.navigate(Screen.PostList.route) },
-            elevation = CardDefaults.cardElevation(4.dp)
+            elevation = CardDefaults.cardElevation(
+                defaultElevation = 8.dp)
         ) {
             Column(
                 modifier = Modifier.padding(16.dp)
@@ -113,15 +120,25 @@ fun ProfilePage(navController: NavController, viewModel: SearchViewModel) {
         // Display user stats
         StatsRow()
 
-        // Display search results and post content
+        // Display post content
         SearchResults(posts)
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Button to change the dynamically changing post ID
+        Button(
+            onClick = {
+                updatePostId()
+            }
+        ) {
+            Text("Change Post ID")
+        }
     }
 }
 
 @Composable
-fun SearchResults( posts: List<Post>) {
+fun SearchResults(posts: List<Post>) {
     Column {
-
         Spacer(modifier = Modifier.height(16.dp))
 
         Text("Post Content:")
@@ -131,7 +148,6 @@ fun SearchResults( posts: List<Post>) {
         }
     }
 }
-
 
 @Composable
 fun StatsRow() {
