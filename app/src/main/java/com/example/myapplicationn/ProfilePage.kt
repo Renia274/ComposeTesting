@@ -62,9 +62,9 @@ fun ProfilePage(navController: NavController, viewModel: SearchViewModel) {
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color.White) // You can customize the background color
+                .background(Color.White) 
                 .padding(8.dp),
-            textStyle = TextStyle(color = Color.Black), // You can customize text appearance
+            textStyle = TextStyle(color = Color.Black), // customize text appearance
             keyboardOptions = KeyboardOptions(
                 imeAction = ImeAction.Search // Customize keyboard actions
             ),
