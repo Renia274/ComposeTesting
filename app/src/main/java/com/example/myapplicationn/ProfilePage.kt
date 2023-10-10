@@ -41,6 +41,7 @@ fun ProfilePage(navController: NavController, viewModel: SearchViewModel) {
         viewModel.updateSinglePostId(newId)
     }
 
+
     val h4Text = TextStyle(
         fontWeight = FontWeight.Bold,
         fontSize = 24.sp,
@@ -125,14 +126,17 @@ fun ProfilePage(navController: NavController, viewModel: SearchViewModel) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Button to change the dynamically changing post ID
+        // Button to change the dynamically changing post ID and navigate to the detail screen
         Button(
             onClick = {
                 updatePostId()
+                // Navigate to the PostDetail route with the selected post ID
+                navController.navigate(Screen.PostDetail.route.replace("{postId}", dynamicPostId.value.toString()))
             }
         ) {
             Text("Change Post ID")
         }
+
     }
 }
 
