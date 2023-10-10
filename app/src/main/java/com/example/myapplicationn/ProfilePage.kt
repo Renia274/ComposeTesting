@@ -134,7 +134,7 @@ fun ProfilePage(navController: NavController, viewModel: SearchViewModel) {
                 navController.navigate(Screen.PostDetail.route.replace("{postId}", dynamicPostId.value.toString()))
             }
         ) {
-            Text("Change Post ID")
+            Text("Go to Post")
         }
 
     }

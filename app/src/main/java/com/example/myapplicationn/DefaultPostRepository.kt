@@ -10,9 +10,7 @@ class DefaultPostRepository : PostRepository {
         return fetchDataFromDataSource()
     }
 
-    override suspend fun updateSinglePostId(newId: Int) {
-        // Implement logic to update the single post ID here
-    }
+
 
     private suspend fun fetchDataFromDataSource(): List<Post> {
         delay(1000)
