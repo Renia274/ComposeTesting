@@ -32,14 +32,15 @@ fun ProfilePage(navController: NavController, viewModel: SearchViewModel) {
     // Property to track whether a search is in progress
     val isSearching: Boolean by viewModel.isSearching.collectAsState()
 
-    val dynamicPostId: MutableState<Int> = remember { mutableStateOf(1) }
+    val dynamicPostId: MutableState<Int> = remember { mutableIntStateOf(1) }
 
     // Function to update the post ID when the button is clicked
     val updatePostId: () -> Unit = {
-        val newId = 3/* Calculate the new ID dynamically */
-            dynamicPostId.value = newId
+        val newId = extractNumericPart(searchText)
+        dynamicPostId.value = newId
         viewModel.updateSinglePostId(newId)
     }
+
 
 
     val h4Text = TextStyle(
@@ -139,6 +140,14 @@ fun ProfilePage(navController: NavController, viewModel: SearchViewModel) {
 
     }
 }
+
+
+fun extractNumericPart(input: String): Int {
+    val regex = Regex("\\d+")
+    val matchResult = regex.find(input)
+    return matchResult?.value?.toIntOrNull() ?: 0
+}
+
 
 @Composable
 fun SearchResults(posts: List<Post>) {
