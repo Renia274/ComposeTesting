@@ -122,9 +122,6 @@ fun ProfilePage(navController: NavController, viewModel: SearchViewModel) {
         // Display user stats
         StatsRow()
 
-        // Display post content
-        SearchResults(posts)
-
         Spacer(modifier = Modifier.height(16.dp))
 
         // Button to change the dynamically changing post ID and navigate to the detail screen
@@ -149,18 +146,7 @@ fun extractNumericPart(input: String): Int {
 }
 
 
-@Composable
-fun SearchResults(posts: List<Post>) {
-    Column {
-        Spacer(modifier = Modifier.height(16.dp))
 
-        Text("Post Content:")
-        posts.forEach { post ->
-            // Display each post's content here
-            Text("Post ${post.id} content: ${post.content}")
-        }
-    }
-}
 
 @Composable
 fun StatsRow() {
