@@ -38,7 +38,7 @@ class SearchViewModel : ViewModel() {
         viewModelScope.launch {
             _isSearching.value = true
 
-            // Perform the search operation (replace with your actual logic)
+            // Perform the search operation 
             val results = fetchDataFromDataSource(query)
 
             // Update the search results in the ViewModel
@@ -64,8 +64,7 @@ class SearchViewModel : ViewModel() {
     }
 
     private suspend fun fetchDataFromDataSource(query: String): List<String> {
-        // Simulate an asynchronous operation, like a network request or database query
-        delay(1000) // Simulate a delay to mimic a real operation
+        delay(1000) 
 
         // search results based on a query
         val results = mockPosts.filter { post ->
