@@ -15,17 +15,23 @@ sealed class Screen(val route: String, val arguments: List<NamedNavArgument> = e
     object PostDetail : Screen("post_detail/{postId}", listOf(navArgument("postId") { type = NavType.IntType }))
 }
 
-
 @Composable
 fun SetupNavigation(navController: NavHostController, viewModel: SearchViewModel) {
-
-
     NavHost(navController = navController, startDestination = Screen.Profile.route) {
         composable(route = Screen.Profile.route) {
-            ProfilePage(navController = navController, viewModel = viewModel)
+            ProfilePage(viewModel = viewModel,
+                onNavigate = { id ->
+                    navController.navigate(Screen.PostDetail.route.replace("{postId}", id.toString()))
+                },
+                postListNavigate = { route ->
+                    navController.navigate(route)
+                }
+            )
         }
         composable(route = Screen.PostList.route) {
-            PostList(navController = navController, viewModel = viewModel)
+            PostList(viewModel = viewModel) { id ->
+                navController.navigate(Screen.PostDetail.route.replace("{postId}", id.toString()))
+            }
         }
         composable(
             route = Screen.PostDetail.route,

@@ -20,10 +20,9 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 
 @Composable
-fun PostList(navController: NavController, viewModel: SearchViewModel) {
+fun PostList(viewModel: SearchViewModel, onNavigate: (Int) -> Unit) {
     val posts = List(22) { Post(id = it, content = "This is post $it content.") }
     val h4Style = TextStyle(
         fontWeight = FontWeight.Bold,
@@ -54,7 +53,9 @@ fun PostList(navController: NavController, viewModel: SearchViewModel) {
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clickable { navController.navigate(Screen.PostDetail.route.replace("{postId}", post.id.toString())) },
+                        .clickable {
+                            onNavigate(post.id) // Pass the post ID to onNavigate
+                        },
                     elevation = CardDefaults.cardElevation(4.dp)
                 ) {
                     Column(
@@ -69,4 +70,3 @@ fun PostList(navController: NavController, viewModel: SearchViewModel) {
         }
     }
 }
-

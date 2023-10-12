@@ -1,12 +1,30 @@
 package com.example.myapplicationn
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -15,15 +33,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
-
-
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 
-fun ProfilePage(navController: NavController, viewModel: SearchViewModel) {
+fun ProfilePage(viewModel: SearchViewModel,onNavigate:(id:Int)->Unit,postListNavigate:(id:String)->Unit) {
     var searchText by remember { mutableStateOf("") }
 
     // Observe the search results and posts using collectAsState
@@ -101,11 +116,12 @@ fun ProfilePage(navController: NavController, viewModel: SearchViewModel) {
         Spacer(modifier = Modifier.height(16.dp))
 
         Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable { navController.navigate(Screen.PostList.route) },
-            elevation = CardDefaults.cardElevation(
-                defaultElevation = 8.dp)
+            modifier = Modifier.fillMaxWidth(),
+            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
+            onClick = {
+                // Use onNavigate to navigate to the PostList screen
+                postListNavigate(Screen.PostList.route)
+            }
         ) {
             Column(
                 modifier = Modifier.padding(16.dp)
@@ -116,6 +132,9 @@ fun ProfilePage(navController: NavController, viewModel: SearchViewModel) {
                 )
             }
         }
+
+
+
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -129,7 +148,8 @@ fun ProfilePage(navController: NavController, viewModel: SearchViewModel) {
             onClick = {
                 updatePostId()
                 // Navigate to the PostDetail route with the selected post ID
-                navController.navigate(Screen.PostDetail.route.replace("{postId}", dynamicPostId.value.toString()))
+                //navController.navigate(Screen.PostDetail.route.replace("{postId}", dynamicPostId.value.toString()))
+                onNavigate(dynamicPostId.value)
             }
         ) {
             Text("Go to Post")
