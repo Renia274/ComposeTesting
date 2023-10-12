@@ -29,9 +29,10 @@ fun SetupNavigation(navController: NavHostController, viewModel: SearchViewModel
             )
         }
         composable(route = Screen.PostList.route) {
-            PostList(viewModel = viewModel) { id ->
-                navController.navigate(Screen.PostDetail.route.replace("{postId}", id.toString()))
-            }
+            PostList(viewModel = viewModel, onNavigateToProfile = {
+                // Use the navController to navigate to the Profile page
+                navController.navigate(Screen.Profile.route)
+            })
         }
         composable(
             route = Screen.PostDetail.route,
@@ -39,7 +40,9 @@ fun SetupNavigation(navController: NavHostController, viewModel: SearchViewModel
         ) { navBackStackEntry ->
             val postId = navBackStackEntry.arguments?.getInt("postId")
             if (postId != null) {
-                PostDetail(postId = postId)
+                PostDetail(postId = postId, onNavigate = { route ->
+                    navController.navigate(route)
+                })
             }
         }
     }

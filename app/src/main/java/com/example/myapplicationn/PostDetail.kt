@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -21,7 +22,7 @@ import androidx.compose.ui.unit.sp
 
 
 @Composable
-fun PostDetail(postId: Int) {
+fun PostDetail(postId: Int, onNavigate: (String) -> Unit) {
     val postContent = "This is post $postId content."
     val postDetailElevation = CardDefaults.cardElevation(6.dp)
     val h4TextStyle = TextStyle(
@@ -69,5 +70,16 @@ fun PostDetail(postId: Int) {
                 Text(text = postContent)
             }
         }
-    }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Add a button to navigate to another screen
+        Button(
+            onClick = {
+                onNavigate(Screen.PostList.route)
+            }
+        ) {
+            Text("Go Back to Post List")
+        }
+}
 }
