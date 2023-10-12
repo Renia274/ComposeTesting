@@ -73,7 +73,7 @@ fun PostDetail(postId: Int, onNavigate: (String) -> Unit) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Add a button to navigate to another screen
+        // button to navigate to post list
         Button(
             onClick = {
                 onNavigate(Screen.PostList.route)

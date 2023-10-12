@@ -32,8 +32,12 @@ fun SetupNavigation(navController: NavHostController, viewModel: SearchViewModel
             PostList(viewModel = viewModel, onNavigateToProfile = {
                 // Use the navController to navigate to the Profile page
                 navController.navigate(Screen.Profile.route)
+            }, onNavigateToPostDetail = { postId ->
+                // Use the navController to navigate to the PostDetail page
+                navController.navigate(Screen.PostDetail.route.replace("{postId}", postId.toString()))
             })
         }
+
         composable(
             route = Screen.PostDetail.route,
             arguments = Screen.PostDetail.arguments

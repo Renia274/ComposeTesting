@@ -28,9 +28,10 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun PostList(
     viewModel: SearchViewModel,
-    onNavigateToProfile: () -> Unit // Function to navigate to Profile
+    onNavigateToProfile: () -> Unit, // Function to navigate to Profile
+    onNavigateToPostDetail: (Int) -> Unit // Function to navigate to PostDetail
 ) {
-    // Create a list of posts (you can replace this with your actual data)
+
     val posts = List(22) { Post(id = it, content = "This is post $it content.") }
 
     val h4Style = TextStyle(
@@ -57,7 +58,7 @@ fun PostList(
 
                 Spacer(modifier = Modifier.weight(1f)) // Pushes the button to the right
 
-                // Add the button to navigate to the Profile page
+                // button to navigate to the Profile page
                 Button(
                     onClick = onNavigateToProfile
                 ) {
@@ -79,7 +80,7 @@ fun PostList(
                             .fillMaxWidth()
                             .clickable {
                                 // Handle click on a post
-                                // You can perform some action here if needed
+                                onNavigateToPostDetail(post.id) // Navigate to PostDetail with the post ID
                             },
                         elevation = CardDefaults.cardElevation(4.dp)
                     ) {

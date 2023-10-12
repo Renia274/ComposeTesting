@@ -148,7 +148,6 @@ fun ProfilePage(viewModel: SearchViewModel,onNavigate:(id:Int)->Unit,postListNav
             onClick = {
                 updatePostId()
                 // Navigate to the PostDetail route with the selected post ID
-                //navController.navigate(Screen.PostDetail.route.replace("{postId}", dynamicPostId.value.toString()))
                 onNavigate(dynamicPostId.value)
             }
         ) {
