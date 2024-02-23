@@ -3,10 +3,10 @@ package com.example.myapplicationn
 import kotlinx.coroutines.delay
 
 class DefaultPostRepository : PostRepository {
-    // You can inject your data source here, e.g., a network or database service
+   
 
     override suspend fun getPosts(): List<Post> {
-        // Replace this with your actual data source query logic
+    
         return fetchDataFromDataSource()
     }
 
