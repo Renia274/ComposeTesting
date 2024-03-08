@@ -28,12 +28,16 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.myapplicationn.helpers.extractNumericPart
 import com.example.myapplicationn.screens.page.components.GoldenRetrieverImage
 import com.example.myapplicationn.screens.page.components.StatsRow
+import com.example.myapplicationn.ui.theme.MyApplicationnTheme
 import com.example.myapplicationn.viewModel.SearchViewModel
+
+
 
 
 @Composable
@@ -42,7 +46,6 @@ fun ProfilePage(
     onNavigate: (Int) -> Unit,
     postListNavigate: (String) -> Unit
 ) {
-
     val context = LocalContext.current
     var searchText by remember { mutableStateOf("") }
 
@@ -52,15 +55,35 @@ fun ProfilePage(
     val isSearching = state.isSearching
     val posts = state.posts
 
+    Column {
+        ProfileContent(
+            searchText = searchText,
+            onSearchTextChange = { newText -> searchText = newText },
+            onSearch = {
+                val postId = extractNumericPart(searchText)
+                if (!isSearching && posts.any { it.id == postId }) {
+                    // Navigate to the detail screen of the specified post
+                    onNavigate(postId)
+                } else {
+                    // Handle the case when the specified post ID does not exist
+                    Toast.makeText(context, "This post is not inside the list", Toast.LENGTH_SHORT).show()
+                }
+            }
+        )
+    }
+}
+
+
+@Composable
+fun ProfileContent(
+    searchText: String,
+    onSearchTextChange: (String) -> Unit,
+    onSearch: () -> Unit
+) {
+
     val h4Text = TextStyle(
         fontWeight = FontWeight.Bold,
         fontSize = 24.sp,
-        letterSpacing = 0.15.sp
-    )
-
-    TextStyle(
-        fontWeight = FontWeight.Bold,
-        fontSize = 20.sp,
         letterSpacing = 0.15.sp
     )
 
@@ -77,16 +100,14 @@ fun ProfilePage(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-
         GoldenRetrieverImage()
 
         Spacer(modifier = Modifier.height(16.dp))
 
+
         TextField(
             value = searchText,
-            onValueChange = { newText ->
-                searchText = newText
-            },
+            onValueChange = onSearchTextChange,
             modifier = Modifier
                 .fillMaxWidth()
                 .background(Color.White)
@@ -96,25 +117,13 @@ fun ProfilePage(
                 imeAction = ImeAction.Search
             ),
             keyboardActions = KeyboardActions(
-                onSearch = {
-                    // Call performSearch with the query and viewModel to update search results
-                    viewModel.performSearch(searchText)
-                }
+                onSearch = { onSearch() }
             ),
             placeholder = {
                 Text(text = "Search")
             },
             trailingIcon = {
-                IconButton(onClick = {
-                    val postId = extractNumericPart(searchText)
-                    if (!isSearching && posts.any { it.id == postId }) {
-                        // Navigate to the detail screen of the specified post
-                        onNavigate(postId)
-                    } else {
-                        // Handle the case when the specified post ID does not exist
-                        Toast.makeText(context, "This post is not inside the list", Toast.LENGTH_SHORT).show()
-                    }
-                }) {
+                IconButton(onClick = onSearch) {
                     Icon(Icons.Default.Search, contentDescription = "Search")
                 }
             }
@@ -126,5 +135,18 @@ fun ProfilePage(
         StatsRow()
 
         Spacer(modifier = Modifier.height(16.dp))
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ProfileContentPreview() {
+
+    MyApplicationnTheme {
+        ProfileContent(
+            searchText = "post0",
+            onSearchTextChange = {},
+            onSearch = {}
+        )
     }
 }

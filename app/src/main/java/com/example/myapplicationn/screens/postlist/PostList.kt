@@ -24,25 +24,28 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.myapplicationn.data.Post
+import com.example.myapplicationn.screens.postlist.components.PostListItem
+import com.example.myapplicationn.ui.theme.MyApplicationnTheme
 import com.example.myapplicationn.viewModel.SearchViewModel
+
 
 @Composable
 fun PostList(
     viewModel: SearchViewModel,
     onNavigateToProfile: () -> Unit,
-    onNavigateToPostDetail: (Int) -> Unit // Function to navigate to PostDetail
+    onNavigateToPostDetail: (Int) -> Unit
 ) {
-    // Create a list of posts
+
     val posts = List(22) { Post(id = it, content = "This is post $it content.") }
 
-    // Call generateInitialPosts with the list of posts
+
     LaunchedEffect(Unit) {
         viewModel.makePosts(posts)
     }
-
 
     val h4Style = TextStyle(
         fontWeight = FontWeight.Bold,
@@ -50,11 +53,10 @@ fun PostList(
         letterSpacing = 0.15.sp
     )
 
-    // Wrap the content in a Box
+
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
-        // Use BoxScope to position your content
         Column(
             modifier = Modifier.padding(8.dp)
         ) {
@@ -66,9 +68,9 @@ fun PostList(
                     style = h4Style
                 )
 
-                Spacer(modifier = Modifier.weight(1f)) // Pushes the button to the right
+                Spacer(modifier = Modifier.weight(1f))
 
-                // Add the button to navigate to the Profile page
+
                 // button to navigate to the Profile page
                 Button(
                     onClick = onNavigateToProfile
@@ -79,34 +81,37 @@ fun PostList(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(MaterialTheme.colorScheme.background)
-                    .padding(8.dp),
-            ) {
-                items(posts) { post ->
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable {
-                                // Handle click on a post
-                                // You can perform some action here if needed
-                                onNavigateToPostDetail(post.id) // Navigate to PostDetail with the post ID
-                            },
-                        elevation = CardDefaults.cardElevation(4.dp)
-                    ) {
-                        Column(
-                            modifier = Modifier.padding(16.dp)
-                        ) {
-                            Text(text = post.content)
-                        }
-                    }
-
-                    Spacer(modifier = Modifier.height(8.dp))
-                }
-            }
+            PostListContent(posts = posts, onItemClick = onNavigateToPostDetail)
         }
+    }
+}
+
+
+@Composable
+fun PostListContent(
+    posts: List<Post>,
+    onItemClick: (Int) -> Unit
+) {
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
+            .padding(8.dp),
+    ) {
+        items(posts) { post ->
+            PostListItem(post = post, onItemClick = onItemClick)
+            Spacer(modifier = Modifier.height(8.dp))
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PostListPreview() {
+    val posts = List(3) { Post(id = it, content = "This is post $it content.") }
+
+    MyApplicationnTheme {
+        PostListContent(posts = posts, onItemClick = {})
     }
 }
 
