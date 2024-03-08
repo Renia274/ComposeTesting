@@ -49,16 +49,16 @@ fun ProfilePage(
 ) {
     val state by viewModel.stateFlow.collectAsState()
 
-    val dynamicPostId = remember { mutableStateOf<Int?>(null) }
+    val dynamicPostId = remember { mutableStateOf(-1) }
 
-// Function to update the post ID when the button is clicked
+    // Function to update the post ID when the button is clicked
     val updatePostId: () -> Unit = {
-        dynamicPostId.value = extractNumericPart(state.searchText)
-        dynamicPostId.value?.let { postId ->
+        val postId = extractNumericPart(state.searchText)
+        if (postId != null && postId in 0..22) {
+            dynamicPostId.value = postId
             viewModel.updateSinglePostId(postId)
         }
     }
-
 
     val h4Text = TextStyle(
         fontWeight = FontWeight.Bold,
@@ -118,8 +118,8 @@ fun ProfilePage(
                 // Add the search icon button
                 IconButton(
                     onClick = {
-                        if (dynamicPostId.value!! in 0..22) {
-                            onNavigate(dynamicPostId.value!!)
+                        if (dynamicPostId.value in 0..22) {
+                            onNavigate(dynamicPostId.value)
                         } else {
                             // Show an error Snackbar only if the ID is invalid
                             val postId = state.searchText.toIntOrNull()
@@ -141,7 +141,7 @@ fun ProfilePage(
         // DisposableEffect to clear search text when navigating to PostDetail
         DisposableEffect(Unit) {
             onDispose {
-                if (dynamicPostId.value!! >= 0) {
+                if (dynamicPostId.value >= 0) {
                     viewModel.updateSearchText("")
                 }
             }

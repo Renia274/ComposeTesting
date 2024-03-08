@@ -1,7 +1,16 @@
 package com.example.myapplicationn.helpers
 
 fun extractNumericPart(input: String): Int? {
-    val regex = Regex("\\b(\\d+)\\b")
-    val matchResult = regex.find(input)
-    return matchResult?.groupValues?.get(1)?.toIntOrNull()
+    val trimmedInput = input.trim()
+    var numericPart = ""
+
+    for (char in trimmedInput) {
+        if (char.isDigit() && numericPart.length < 2) {
+            numericPart += char
+        } else if (numericPart.isNotEmpty()) {
+            break
+        }
+    }
+
+    return numericPart.toIntOrNull()
 }
