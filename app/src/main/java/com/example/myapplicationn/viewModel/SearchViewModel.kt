@@ -23,7 +23,7 @@ class SearchViewModel : ViewModel() {
     private val state = MutableStateFlow(ProfilePageState())
     val stateFlow: StateFlow<ProfilePageState> = state
 
-    suspend fun generateInitialPosts(posts: List<Post>) {
+    suspend fun makePosts(posts: List<Post>) {
         delay(1000) // Simulate network delay
         state.update { it.copy(posts = posts) }
     }
@@ -70,7 +70,7 @@ class SearchViewModel : ViewModel() {
         // Initialize posts when ViewModel is created
         viewModelScope.launch {
             val posts = List(22) { Post(id = it, content = "This is post $it content.") }
-            generateInitialPosts(posts)
+            makePosts(posts)
         }
     }
 

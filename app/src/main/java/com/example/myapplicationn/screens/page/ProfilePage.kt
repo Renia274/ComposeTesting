@@ -10,10 +10,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -31,18 +31,16 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.myapplicationn.helpers.extractNumericPart
-import com.example.myapplicationn.navigation.Screen
 import com.example.myapplicationn.screens.page.components.GoldenRetrieverImage
 import com.example.myapplicationn.screens.page.components.StatsRow
 import com.example.myapplicationn.viewModel.SearchViewModel
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfilePage(
     viewModel: SearchViewModel,
-    onNavigate: (id: Int) -> Unit,
-    postListNavigate: (id: String) -> Unit
+    onNavigate: (Int) -> Unit,
+    postListNavigate: (String) -> Unit
 ) {
 
     val context = LocalContext.current
@@ -60,7 +58,7 @@ fun ProfilePage(
         letterSpacing = 0.15.sp
     )
 
-    val h6Text = TextStyle(
+    TextStyle(
         fontWeight = FontWeight.Bold,
         fontSize = 20.sp,
         letterSpacing = 0.15.sp
@@ -84,8 +82,6 @@ fun ProfilePage(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-
-
         TextField(
             value = searchText,
             onValueChange = { newText ->
@@ -101,33 +97,28 @@ fun ProfilePage(
             ),
             keyboardActions = KeyboardActions(
                 onSearch = {
+                    // Call performSearch with the query and viewModel to update search results
                     viewModel.performSearch(searchText)
                 }
             ),
             placeholder = {
                 Text(text = "Search")
+            },
+            trailingIcon = {
+                IconButton(onClick = {
+                    val postId = extractNumericPart(searchText)
+                    if (!isSearching && posts.any { it.id == postId }) {
+                        // Navigate to the detail screen of the specified post
+                        onNavigate(postId)
+                    } else {
+                        // Handle the case when the specified post ID does not exist
+                        Toast.makeText(context, "This post is not inside the list", Toast.LENGTH_SHORT).show()
+                    }
+                }) {
+                    Icon(Icons.Default.Search, contentDescription = "Search")
+                }
             }
         )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-            onClick = {
-                // Use onNavigate to navigate to the PostList screen
-                postListNavigate(Screen.PostList.route)
-            }
-        ) {
-            Column(
-                modifier = Modifier.padding(16.dp)
-            ) {
-                Text(
-                    text = "View Posts",
-                    style = h6Text
-                )
-            }
-        }
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -135,22 +126,5 @@ fun ProfilePage(
         StatsRow()
 
         Spacer(modifier = Modifier.height(16.dp))
-
-        // Button to navigate to the detail screen of the first post
-        Button(
-            onClick = {
-                val postId = extractNumericPart(searchText)
-                if (!isSearching && posts.any { it.id == postId }) {
-                    // Navigate to the detail screen of the specified post
-                    onNavigate(postId)
-                } else {
-                    // Handle the case when the specified post ID does not exist
-                    Toast.makeText(context, "This post is not inside the list", Toast.LENGTH_SHORT).show()
-                }
-            }
-        ) {
-            Text("Go to Post")
-        }
     }
 }
-

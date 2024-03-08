@@ -40,7 +40,7 @@ fun PostList(
 
     // Call generateInitialPosts with the list of posts
     LaunchedEffect(Unit) {
-        viewModel.generateInitialPosts(posts)
+        viewModel.makePosts(posts)
     }
 
 
