@@ -1,5 +1,6 @@
 package com.example.myapplicationn.screens.page
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -9,25 +10,21 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Snackbar
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -47,18 +44,15 @@ fun ProfilePage(
     onNavigate: (id: Int) -> Unit,
     postListNavigate: (id: String) -> Unit
 ) {
+
+    val context = LocalContext.current
+    var searchText by remember { mutableStateOf("") }
+
     val state by viewModel.stateFlow.collectAsState()
 
-    val dynamicPostId = remember { mutableStateOf(-1) }
-
-    // Function to update the post ID when the button is clicked
-    val updatePostId: () -> Unit = {
-        val postId = extractNumericPart(state.searchText)
-        if (postId != null && postId in 0..22) {
-            dynamicPostId.value = postId
-            viewModel.updateSinglePostId(postId)
-        }
-    }
+    // Extract necessary state information
+    val isSearching = state.isSearching
+    val posts = state.posts
 
     val h4Text = TextStyle(
         fontWeight = FontWeight.Bold,
@@ -85,15 +79,17 @@ fun ProfilePage(
 
         Spacer(modifier = Modifier.height(16.dp))
 
+
         GoldenRetrieverImage()
 
         Spacer(modifier = Modifier.height(16.dp))
 
+
+
         TextField(
-            value = state.searchText,
+            value = searchText,
             onValueChange = { newText ->
-                viewModel.updateSearchText(newText)
-                updatePostId() // Call updatePostId whenever search text changes
+                searchText = newText
             },
             modifier = Modifier
                 .fillMaxWidth()
@@ -105,47 +101,13 @@ fun ProfilePage(
             ),
             keyboardActions = KeyboardActions(
                 onSearch = {
-                    // Dismiss Snackbar before performing the search
-                    viewModel.dismissSnackbar()
-                    // Call performSearch with the query and viewModel to update search results
-                    viewModel.performSearch(state.searchText)
+                    viewModel.performSearch(searchText)
                 }
             ),
             placeholder = {
                 Text(text = "Search")
-            },
-            trailingIcon = {
-                // Add the search icon button
-                IconButton(
-                    onClick = {
-                        if (dynamicPostId.value in 0..22) {
-                            onNavigate(dynamicPostId.value)
-                        } else {
-                            // Show an error Snackbar only if the ID is invalid
-                            val postId = state.searchText.toIntOrNull()
-                            if (postId == null || postId !in 0 until 22) {
-                                viewModel.showSnackbar("Invalid post ID entered.")
-                            }
-                        }
-                    }
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Search,
-                        contentDescription = "Search",
-                        tint = Color.Black
-                    )
-                }
             }
         )
-
-        // DisposableEffect to clear search text when navigating to PostDetail
-        DisposableEffect(Unit) {
-            onDispose {
-                if (dynamicPostId.value >= 0) {
-                    viewModel.updateSearchText("")
-                }
-            }
-        }
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -153,8 +115,7 @@ fun ProfilePage(
             modifier = Modifier.fillMaxWidth(),
             elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
             onClick = {
-                // Clear search text and navigate to PostList
-                viewModel.updateSearchText("")
+                // Use onNavigate to navigate to the PostList screen
                 postListNavigate(Screen.PostList.route)
             }
         ) {
@@ -175,18 +136,21 @@ fun ProfilePage(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Show the error Snackbar if showErrorSnackbar is true and the search is invalid
-        if (state.showErrorSnackbar && !state.isSearching) {
-            Snackbar(
-                modifier = Modifier.padding(16.dp),
-                action = {
-                    Button(onClick = { viewModel.dismissSnackbar() }) {
-                        Text("Dismiss")
-                    }
+        // Button to navigate to the detail screen of the first post
+        Button(
+            onClick = {
+                val postId = extractNumericPart(searchText)
+                if (!isSearching && posts.any { it.id == postId }) {
+                    // Navigate to the detail screen of the specified post
+                    onNavigate(postId)
+                } else {
+                    // Handle the case when the specified post ID does not exist
+                    Toast.makeText(context, "This post is not inside the list", Toast.LENGTH_SHORT).show()
                 }
-            ) {
-                Text(state.snackbarMessage)
             }
+        ) {
+            Text("Go to Post")
         }
     }
 }
+

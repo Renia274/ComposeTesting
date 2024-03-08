@@ -8,9 +8,9 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.example.myapplicationn.screens.detail.PostDetail
-import com.example.myapplicationn.screens.postlist.PostList
+import com.example.myapplicationn.PostDetail
 import com.example.myapplicationn.screens.page.ProfilePage
+import com.example.myapplicationn.screens.postlist.PostList
 import com.example.myapplicationn.viewModel.SearchViewModel
 
 sealed class Screen(val route: String, val arguments: List<NamedNavArgument> = emptyList()) {

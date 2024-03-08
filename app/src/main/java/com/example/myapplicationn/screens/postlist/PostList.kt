@@ -1,5 +1,6 @@
 package com.example.myapplicationn.screens.postlist
 
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -18,6 +19,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
@@ -31,10 +33,16 @@ import com.example.myapplicationn.viewModel.SearchViewModel
 fun PostList(
     viewModel: SearchViewModel,
     onNavigateToProfile: () -> Unit,
-    onNavigateToPostDetail: (Int) -> Unit
+    onNavigateToPostDetail: (Int) -> Unit // Function to navigate to PostDetail
 ) {
+    // Create a list of posts
+    val posts = List(22) { Post(id = it, content = "This is post $it content.") }
 
-    val posts = List(23) { Post(id = it, content = "This is post $it content.") }
+    // Call generateInitialPosts with the list of posts
+    LaunchedEffect(Unit) {
+        viewModel.generateInitialPosts(posts)
+    }
+
 
     val h4Style = TextStyle(
         fontWeight = FontWeight.Bold,
@@ -42,10 +50,11 @@ fun PostList(
         letterSpacing = 0.15.sp
     )
 
+    // Wrap the content in a Box
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
-
+        // Use BoxScope to position your content
         Column(
             modifier = Modifier.padding(8.dp)
         ) {
@@ -57,8 +66,9 @@ fun PostList(
                     style = h4Style
                 )
 
-                Spacer(modifier = Modifier.weight(1f))
+                Spacer(modifier = Modifier.weight(1f)) // Pushes the button to the right
 
+                // Add the button to navigate to the Profile page
                 // button to navigate to the Profile page
                 Button(
                     onClick = onNavigateToProfile
@@ -73,7 +83,7 @@ fun PostList(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(MaterialTheme.colorScheme.background)
-                    .padding(8.dp)
+                    .padding(8.dp),
             ) {
                 items(posts) { post ->
                     Card(
@@ -81,6 +91,7 @@ fun PostList(
                             .fillMaxWidth()
                             .clickable {
                                 // Handle click on a post
+                                // You can perform some action here if needed
                                 onNavigateToPostDetail(post.id) // Navigate to PostDetail with the post ID
                             },
                         elevation = CardDefaults.cardElevation(4.dp)
@@ -98,3 +109,4 @@ fun PostList(
         }
     }
 }
+

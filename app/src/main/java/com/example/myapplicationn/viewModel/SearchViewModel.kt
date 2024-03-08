@@ -1,6 +1,5 @@
 package com.example.myapplicationn.viewModel
 
-
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplicationn.data.Post
@@ -9,7 +8,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-
 
 data class ProfilePageState(
     val searchText: String = "",
@@ -24,6 +22,11 @@ data class ProfilePageState(
 class SearchViewModel : ViewModel() {
     private val state = MutableStateFlow(ProfilePageState())
     val stateFlow: StateFlow<ProfilePageState> = state
+
+    suspend fun generateInitialPosts(posts: List<Post>) {
+        delay(1000) // Simulate network delay
+        state.update { it.copy(posts = posts) }
+    }
 
     fun updateSearchText(newText: String) {
         state.update { it.copy(searchText = newText) }
@@ -63,22 +66,12 @@ class SearchViewModel : ViewModel() {
         return results
     }
 
-    private suspend fun generateInitialPosts(): List<Post> {
-        delay(1000) // Simulate network delay
-
-        // Generate initial posts
-        return listOf(
-            Post(id = 1, content = "This is post 1 content."),
-            Post(id = 2, content = "This is post 2 content."),
-            Post(id = 3, content = "This is post 3 content.")
-        )
-    }
-
     init {
         // Initialize posts when ViewModel is created
         viewModelScope.launch {
-            val newPosts = generateInitialPosts()
-            state.update { it.copy(posts = newPosts) }
+            val posts = List(22) { Post(id = it, content = "This is post $it content.") }
+            generateInitialPosts(posts)
         }
     }
+
 }

@@ -1,4 +1,4 @@
-package com.example.myapplicationn.screens.detail
+package com.example.myapplicationn
 
 
 import androidx.compose.foundation.background
@@ -74,6 +74,7 @@ fun PostDetail(postId: Int, onNavigate: (String) -> Unit) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        // Add a button to navigate to another screen
         // button to navigate to post list
         Button(
             onClick = {
@@ -84,3 +85,4 @@ fun PostDetail(postId: Int, onNavigate: (String) -> Unit) {
         }
     }
 }
+
