@@ -1,4 +1,4 @@
-package com.example.myapplicationn
+package com.example.myapplicationn.screens.detail
 
 
 import androidx.compose.foundation.background
@@ -19,6 +19,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.myapplicationn.navigation.Screen
 
 
 @Composable
@@ -81,5 +82,5 @@ fun PostDetail(postId: Int, onNavigate: (String) -> Unit) {
         ) {
             Text("Go Back to Post List")
         }
-}
+    }
 }

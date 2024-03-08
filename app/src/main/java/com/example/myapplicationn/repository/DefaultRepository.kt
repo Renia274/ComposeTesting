@@ -1,12 +1,15 @@
-package com.example.myapplicationn
+package com.example.myapplicationn.repository
 
+
+
+import com.example.myapplicationn.data.Post
 import kotlinx.coroutines.delay
 
 class DefaultPostRepository : PostRepository {
-   
+
 
     override suspend fun getPosts(): List<Post> {
-    
+
         return fetchDataFromDataSource()
     }
 

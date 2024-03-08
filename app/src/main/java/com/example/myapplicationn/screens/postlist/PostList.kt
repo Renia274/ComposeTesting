@@ -1,4 +1,4 @@
-package com.example.myapplicationn
+package com.example.myapplicationn.screens.postlist
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -24,15 +24,17 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.myapplicationn.data.Post
+import com.example.myapplicationn.viewModel.SearchViewModel
 
 @Composable
 fun PostList(
     viewModel: SearchViewModel,
-    onNavigateToProfile: () -> Unit, // Function to navigate to Profile
-    onNavigateToPostDetail: (Int) -> Unit // Function to navigate to PostDetail
+    onNavigateToProfile: () -> Unit,
+    onNavigateToPostDetail: (Int) -> Unit
 ) {
 
-    val posts = List(22) { Post(id = it, content = "This is post $it content.") }
+    val posts = List(23) { Post(id = it, content = "This is post $it content.") }
 
     val h4Style = TextStyle(
         fontWeight = FontWeight.Bold,
@@ -40,11 +42,10 @@ fun PostList(
         letterSpacing = 0.15.sp
     )
 
-    // Wrap the content in a Box
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
-        // Use BoxScope to position your content
+
         Column(
             modifier = Modifier.padding(8.dp)
         ) {
@@ -56,7 +57,7 @@ fun PostList(
                     style = h4Style
                 )
 
-                Spacer(modifier = Modifier.weight(1f)) // Pushes the button to the right
+                Spacer(modifier = Modifier.weight(1f))
 
                 // button to navigate to the Profile page
                 Button(
@@ -72,7 +73,7 @@ fun PostList(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(MaterialTheme.colorScheme.background)
-                    .padding(8.dp),
+                    .padding(8.dp)
             ) {
                 items(posts) { post ->
                     Card(

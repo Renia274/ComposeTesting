@@ -6,6 +6,8 @@ import androidx.activity.compose.setContent
 import com.example.myapplicationn.ui.theme.MyApplicationnTheme
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
+import com.example.myapplicationn.navigation.SetupNavigation
+import com.example.myapplicationn.viewModel.SearchViewModel
 
 
 class MainActivity : ComponentActivity() {
@@ -14,7 +16,6 @@ class MainActivity : ComponentActivity() {
         setContent {
             val navController = rememberNavController()
 
-            // Initialize the SearchViewModel using the viewModel() function
             val viewModel: SearchViewModel = viewModel()
 
             MyApplicationnTheme {

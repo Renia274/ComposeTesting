@@ -1,4 +1,4 @@
-package com.example.myapplicationn
+package com.example.myapplicationn.navigation
 
 
 import androidx.compose.runtime.Composable
@@ -8,6 +8,10 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.example.myapplicationn.screens.detail.PostDetail
+import com.example.myapplicationn.screens.postlist.PostList
+import com.example.myapplicationn.screens.page.ProfilePage
+import com.example.myapplicationn.viewModel.SearchViewModel
 
 sealed class Screen(val route: String, val arguments: List<NamedNavArgument> = emptyList()) {
     object Profile : Screen("profile")
@@ -19,7 +23,8 @@ sealed class Screen(val route: String, val arguments: List<NamedNavArgument> = e
 fun SetupNavigation(navController: NavHostController, viewModel: SearchViewModel) {
     NavHost(navController = navController, startDestination = Screen.Profile.route) {
         composable(route = Screen.Profile.route) {
-            ProfilePage(viewModel = viewModel,
+            ProfilePage(
+                viewModel = viewModel,
                 onNavigate = { id ->
                     navController.navigate(Screen.PostDetail.route.replace("{postId}", id.toString()))
                 },
@@ -28,6 +33,7 @@ fun SetupNavigation(navController: NavHostController, viewModel: SearchViewModel
                 }
             )
         }
+
         composable(route = Screen.PostList.route) {
             PostList(viewModel = viewModel, onNavigateToProfile = {
                 // Use the navController to navigate to the Profile page
