@@ -19,5 +19,6 @@ between the profile page, a list of posts, and individual post detail pages.
 
 To get started you'll need to follow these steps:
 
-    Clone the repository: git clone git clone https://github.com/Renia274/Notes-taking-app.git
+    Clone the repository: git clone https://github.com/Renia274/Profile-Page.git
+
     Install Android Studio 
