@@ -1,4 +1,4 @@
-##Profile Page
+###Profile Page
 
 This repository contains code for a simple profile page application built using Jetpack Compose for Android. The profile page displays user information, including a search bar, user stats, and a list of posts. Users can navigate 
 between the profile page, a list of posts, and individual post detail pages.
