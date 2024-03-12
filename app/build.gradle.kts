@@ -76,21 +76,8 @@ dependencies {
     // Typography dependency
     implementation("androidx.compose.ui:ui-text:1.5.3")
 
-    // Retrofit
-    implementation("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+  
 
-    implementation("androidx.compose.runtime:runtime:1.5.3")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0-alpha02")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
-
-    // Hilt Dependencies
-    implementation("com.google.dagger:hilt-android:2.48.1")
-
-    implementation("androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03")
-
-
-    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
 //Livedata
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.2")
